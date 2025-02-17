@@ -1,0 +1,620 @@
+/* always show scrollbars */
+
+::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 0px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, .5);
+    box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+  }
+.recorder-container {
+    display: none;
+    all: unset;
+    position: absolute;
+    bottom: 15%;
+    right: 50%;
+    transform: translateX(50%);
+    width: 200px;
+    height: 60px;
+    z-index: 1;
+}
+
+.hide-recoder{
+    display: none;
+}
+.show-recoder{
+    display: flex;
+}
+
+.progress-container {
+    display: none;
+}
+
+#recorder-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 2rem;
+    color: black;
+}
+
+#icon {
+    padding-right: 10px;
+}
+#overlay {
+    display: none;
+    z-index: 35;
+    position: absolute;
+    top: 0;
+    /* bottom: 0; */
+    left: 0;
+    right: 0;
+    pointer-events: none;
+}
+
+#savePrompt {
+    position: absolute;
+    left: 50%;
+    bottom: 22vh;
+    transform: translateX(-50%);
+    max-width: 80vw;
+
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 6vmin;
+    color: black;
+    text-align: center;
+
+    background-color: white;
+    padding: 2vmin;
+    border-radius: 10px;
+}
+
+#actionButton {
+/* change color of action button */
+    background-color: #007aff !important;
+}
+
+body {
+    margin: 0;
+    background-color: rgba(255, 255, 255, 0.999);
+}
+#wrapper {
+    margin: 0 auto;
+    max-width: 100vh;
+    background-color: rgba(255, 0, 0, 0);
+}
+@media screen and (orientation: landscape) {
+    #wrapper {
+      min-height: 100vh;
+    }
+    #home_page1_hunter {
+        width: 35%;
+        margin-top: 5vh;
+    }
+    #home_page1_title {
+        width: 100%;
+        margin-top: 3vh;
+    }
+    #home_page1_desc {
+        width: 20%;
+    }
+    #start_game {
+        width: 35%;
+        margin: auto;
+        position: absolute;
+        bottom: 0;
+        margin-bottom: 4vh;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    /* .anwser_page1 .cover{
+        margin-top: 34vh;
+        height: 120%;
+        background-image: url("../imagesweb/home_button_cover.webp");
+        background-size: 100% 100%;
+    } */
+    .question_page1 .cover{
+        margin-top: 34vh;
+        height: 120%;
+        background-image: url("../imagesweb/home_button_cover.webp");
+        background-size: 100% 100%;
+    }
+    .intro1_1_page {
+        width: 100% ;
+        height: 190vh ;
+        background: url("../imagesweb/intro/intro_bg1.webp") ;  
+        -webkit-background-size: cover ;
+        background-size: cover ;
+        background-attachment: fixed;
+        background-position: center;
+        position:relative;
+        z-index: 9999;
+    }
+    .intro2_1_page {
+        width: 100% ;
+        height: 190vh ;
+        background: url("../imagesweb/intro/intro_bg2.webp") ;  
+        -webkit-background-size: cover ;
+        background-size: cover ;
+        background-attachment: fixed;
+        background-position: center;
+        position:relative;
+        z-index: 9999;
+    }
+    .intro3_1_page {
+        width: 100% ;
+        height: 190vh ;
+        background: url("../imagesweb/intro/intro_bg3.webp") ;  
+        -webkit-background-size: cover ;
+        background-size: cover ;
+        background-attachment: fixed;
+        background-position: center;
+        position:relative;
+        z-index: 9999;
+    }
+}
+@media screen and (orientation: portrait) {
+    #wrapper {
+      min-height: 100vw;
+    }
+    #home_page1_hunter {
+        width: 60%;
+        margin-top: 5vh;
+    }
+    #home_page1_title {
+        width: 100%;
+        margin-top: 6vh;
+    }
+    #home_page1_desc {
+        width: 60%;
+    }
+    #start_game {
+        width: 35%;
+        margin: auto;
+        position: absolute;
+        bottom: 0;
+        margin-bottom: 4vh;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    /* .anwser_page1 .cover{
+        margin-top: 14vh;
+        height: 86%;
+        background-image: url("../imagesweb/home_button_cover1.webp");
+        background-size: 100% 100%;
+        position: absolute;
+        bottom: 0;
+    } */
+    .question_page1 .cover{
+        margin-top: 14vh;
+        height: 86%;
+        background-image: url("../imagesweb/home_button_cover1.webp");
+        background-size: 100% 100%;
+    }
+    .intro1_1_page {
+        width: 100% ;
+        height: 130vh ;
+        background: url("../imagesweb/intro/intro_bg1.webp");  
+        -webkit-background-size: cover ;
+        background-size: cover ;
+        background-attachment: fixed;
+        background-position: center;
+        position:relative;
+        z-index: 9999;
+    }
+    .intro2_1_page {
+        width: 100% ;
+        height: 130vh ;
+        background: url("../imagesweb/intro/intro_bg2.webp");  
+        -webkit-background-size: cover ;
+        background-size: cover ;
+        background-attachment: fixed;
+        background-position: center;
+        position:relative;
+        z-index: 9999;
+    }
+    .intro3_1_page {
+        width: 100% ;
+        height: 130vh ;
+        background: url("../imagesweb/intro/intro_bg3.webp");  
+        -webkit-background-size: cover ;
+        background-size: cover ;
+        background-attachment: fixed;
+        background-position: center;
+        position:relative;
+        z-index: 9999;
+    }
+}
+.home_page1 {
+	width: 100% ;
+    height: 100vh ;
+    background: url("../imagesweb/home_bg.webp")  no-repeat  center  bottom ;  
+    -webkit-background-size: cover ;
+    background-size: cover ;
+    background-attachment: fixed;
+    position:relative;
+    z-index: 9999;
+}
+.home_page1 .cover{
+    position: absolute;
+    bottom: 0;
+    margin-bottom:-1vh;
+}
+
+.anwser_page1 {
+    width: 100% ;
+    height: 100vh ;
+    background: url("../imagesweb/question/question_bg.webp")  no-repeat  center  bottom ;  
+    -webkit-background-size: cover ;
+    background-size: cover ;
+    background-attachment: fixed;
+    position:relative;
+    z-index: 9999;
+}
+.anwser_page1 .btn{
+    /* width: 100%;
+    position:absolute;
+    bottom: 0;
+    text-align: center; */
+    width: 100%;
+    padding-top: 8%;
+    position:absolute;
+    z-index: 10000;
+}
+.anwser_page1 .cover{
+    position: absolute;
+    bottom: 0;
+}
+.anwser_page1 .back_btn{
+    width: 100%;
+    position:absolute;
+    top: 0;
+}
+
+.question_page1 {
+    width: 100% ;
+    height: 100vh ;
+    background: url("../imagesweb/question/question_bg.webp")  no-repeat  center  bottom ;  
+    -webkit-background-size: cover ;
+    background-size: cover ;
+    background-attachment: fixed;
+    position:relative;
+    z-index: 9999;
+}
+.question_page1 .btn{
+    width: 100%;
+    position:absolute;
+    bottom: 0;
+    text-align: center;
+}
+.question_page1 .back_btn{
+    width: 100%;
+    position:absolute;
+    top: 0;
+    padding-top: 5%;
+    text-align: center;
+}
+
+.intro1_1_page {
+    width: 100% ;
+    /* overflow: auto; */
+    height: 100vh;
+    background: url("../imagesweb/intro/intro_bg1.webp");  
+    -webkit-background-size: cover ;
+    background-size: cover ;
+    background-attachment: fixed;
+    background-position: center;
+    position:relative;
+    /* padding-top: 3vh; */
+}
+
+.intro2_1_page {
+    width: 100% ;
+    /* overflow: auto; */
+    height: 100vh;
+    background: url("../imagesweb/intro/intro_bg2.webp");  
+    -webkit-background-size: cover ;
+    background-size: cover ;
+    background-attachment: fixed;
+    background-position: center;
+    position:relative;
+    /* padding-top: 3vh; */
+}
+
+.intro3_1_page {
+    width: 100% ;
+    /* overflow: auto; */
+    height: 100vh;
+    background: url("../imagesweb/intro/intro_bg3.webp");  
+    -webkit-background-size: cover ;
+    background-size: cover ;
+    background-attachment: fixed;
+    background-position: center;
+    position:relative;
+    /* padding-top: 3vh; */
+}
+.intro1_1_page .container{
+    /* width: 100%;
+    position:absolute; */
+    z-index: 10000;
+    position: relative;
+    height: 100vh; /* 讓容器高度佔滿螢幕 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.intro2_1_page .container{
+    /* width: 100%;
+    position:absolute; */
+    z-index: 10000;
+    position: relative;
+    height: 100vh; /* 讓容器高度佔滿螢幕 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.intro3_1_page .container{
+    /* width: 100%;
+    position:absolute; */
+    z-index: 10000;
+    position: relative;
+    height: 100vh; /* 讓容器高度佔滿螢幕 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.clue_page1 {
+    width: 100% ;
+    height: 100vh ;
+    background: url("../imagesweb/question/question_bg.webp")  no-repeat  center  bottom ;  
+    -webkit-background-size: cover ;
+    background-size: cover ;
+    background-attachment: fixed;
+    position:relative;
+    z-index: 9999;
+}
+.clue_page1 .cover{
+    position: absolute;
+    bottom: 0;
+}
+.clue_page1 .container{
+    width: 100%;
+    position:absolute;
+    z-index: 10000;
+}
+.clue_page1 .btn{
+    width: 100%;
+    padding-top: 8%;
+    position:absolute;
+    z-index: 10000;
+}
+.clue_progress{
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    position:fixed;
+    margin-bottom: 3vh;
+    margin-left: 3vw;
+    z-index: 5000;
+    display: none;
+}
+
+.result_page1 {
+    width: 100% ;
+    height: 100vh ;
+    background: url("../imagesweb/question/question_bg.webp")  no-repeat  center  bottom ;  
+    -webkit-background-size: cover ;
+    background-size: cover ;
+    background-attachment: fixed;
+    position:relative;
+    z-index: 9999;
+}
+.result_page1 .container{
+    width: 100%;
+    position:absolute;
+    /* margin-top: 10%; */
+    z-index: 0;
+}
+.result_page1 .btn{
+    /* width: 100%;
+    position:absolute;
+    margin-top: 50%;
+    text-align: center; */
+    width: 100%;
+    padding-top: 8%;
+    position:absolute;
+    z-index: 10000;
+}
+
+/*====================Old=======================*/
+/* .home_page {
+		width: 100% ;
+	  height: 100vh ;
+	  background: url("../imagesweb/home_bg.webp")  no-repeat  center  bottom ;  
+	  -webkit-background-size: cover ;
+	  background-size: cover ;
+	  background-attachment: fixed;
+	  position:relative;
+	  z-index: 9999;
+}
+.home_page .container{
+    width: 100%;
+    position:absolute;
+    bottom: 0;
+}
+.home_page .btn{
+    width: 100%;
+    position:absolute;
+    bottom: 0;
+    text-align: center;
+    margin-bottom: 3vh;
+}
+
+.anwser_page {
+		width: 100% ;
+	  height: 100vh ;
+	  background: url("../imagesweb/anwser/anwser_bg.webp")  no-repeat  center  bottom ;  
+	  -webkit-background-size: cover ;
+	  background-size: cover ;
+	  background-attachment: fixed;
+	  position:relative;
+	  z-index: 9999;
+}
+.anwser_page .container{
+    width: 100%;
+    height: 80vh;
+    position:absolute;
+    bottom: 0;
+    z-index: 0;
+}
+.anwser_page .btn{
+    width: 100%;
+    position:absolute;
+    bottom: 0;
+    text-align: center;
+}
+.anwser_page .back_btn{
+    width: 100%;
+    position:absolute;
+    top: 0;
+}
+
+.clue_page {
+		width: 100% ;
+	  height: 100vh ;
+	  background-color: rgba(128, 128, 128, 0);  
+	  -webkit-background-size: cover ;
+	  background-size: cover ;
+	  background-attachment: fixed;
+	  position:relative;
+	  z-index: 9999;
+}
+.clue_page .container{
+    width: 100%;
+    position:absolute;
+    z-index: 10000;
+}
+.clue_page .btn{
+    width: 100%;
+    padding-top: 20%;
+    position:absolute;
+    z-index: 10000;
+}
+.clue_page .clue_progress{
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    position:fixed;
+    margin-bottom: 3vh;
+    margin-left: 3vw;
+    z-index: 10000;
+}
+
+.result_page {
+    width: 100% ;
+    height: 100vh ;
+    background: url("../imagesweb/result/result_bg.webp")  no-repeat  center  bottom ;  
+    -webkit-background-size: cover ;
+    background-size: cover ;
+    background-attachment: fixed;
+    position:relative;
+    z-index: 9999;
+}
+.result_page .container{
+    width: 100%;
+    position:absolute;
+    margin-top: 10%;
+    z-index: 0;
+}
+.result_page .btn{
+    width: 100%;
+    position:absolute;
+    margin-top: 40%;
+    text-align: center;
+}
+
+.intro1_page {
+    width: 100% ;
+    height: 100vh ;
+    background: url("../imagesweb/intro/intro_bg1.webp")  no-repeat  center  bottom ;  
+    -webkit-background-size: cover ;
+    background-size: cover ;
+    background-attachment: fixed;
+    position:relative;
+    z-index: 9999;
+}
+.intro1_page .container{
+    width: 100%;
+    position:absolute;
+    z-index: 10000;
+}
+.intro2_page {
+    width: 100% ;
+    height: 100vh ;
+    background: url("../imagesweb/intro/intro_bg2.webp")  no-repeat  center  bottom ;  
+    -webkit-background-size: cover ;
+    background-size: cover ;
+    background-attachment: fixed;
+    position:relative;
+    z-index: 9999;
+}
+.intro2_page .container{
+    width: 100%;
+    position:absolute;
+    z-index: 10000;
+}
+.intro3_page {
+    width: 100% ;
+    height: 100vh ;
+    background: url("../imagesweb/intro/intro_bg3.webp")  no-repeat  center  bottom ;  
+    -webkit-background-size: cover ;
+    background-size: cover ;
+    background-attachment: fixed;
+    position:relative;
+    z-index: 9999;
+}
+.intro3_page .container{
+    width: 100%;
+    position:absolute;
+    z-index: 10000;
+}
+
+.question_page {
+    width: 100% ;
+    height: 100vh ;
+    background: url("../imagesweb/question/question_bg.webp")  no-repeat  center  bottom ;  
+    -webkit-background-size: cover ;
+    background-size: cover ;
+    background-attachment: fixed;
+    position:relative;
+    z-index: 9999;
+}
+.question_page .container{
+    width: 100%;
+    height: 80vh;
+    position:absolute;
+    bottom: 0;
+    z-index: 0;
+}
+.question_page .btn{
+    width: 100%;
+    position:absolute;
+    bottom: 0;
+    text-align: center;
+}
+.question_page .back_btn{
+    width: 100%;
+    position:absolute;
+    top: 0;
+} */

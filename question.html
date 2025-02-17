@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <title>Hualien</title>
+  <meta name="description" content="Hualien">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <link rel="stylesheet" type="text/css" href="./assets/main.css">
+  <script src="aframe-master.js"></script>
+  <script src="animation-mixer.js"></script>
+  <script src="ar-shadows.js"></script>
+  <script src="model-viewer.js"></script>
+  <script src="background-gradient.js"></script>
+  <style>
+    @media (orientation: landscape) {
+      #wrapper {
+        display: none;
+      }
+      .landscape-warning {
+        display: block;
+        text-align: center;
+        font-size: 20px;
+        color: red;
+      }
+    }
+  
+    /* 當裝置為直向時，正常顯示內容 */
+    @media (orientation: portrait) {
+      #wrapper {
+        display: block;
+      }
+      .landscape-warning {
+        display: none;
+      }
+    }
+      
+      
+
+    @media (max-width: 768px) {
+      #intro_info{
+        width: 75%;
+        height: 25vh;
+        position:absolute;
+        top: 0;
+        margin-top: 50vh;
+        overflow: auto;
+        -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+        mask-image: linear-gradient(to bottom, black 50%, rgba(128, 128, 128, 0) 100%)
+      }
+      #intro_info_word{
+        font-size:1em;
+        padding-left: 3%;
+        padding-right: 3%;
+        text-align: justify; 
+        color:#563E2F;
+        padding-bottom: 10vw;
+      }
+    }
+    @media (min-width: 768px) {
+      #intro_info{
+        width: 75%;
+        height: 25vh;
+        position:absolute;
+        top: 0;
+        margin-top: 50vh;
+        overflow: auto;
+        -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+        mask-image: linear-gradient(to bottom, black 50%, rgba(128, 128, 128, 0) 100%)
+      }
+      #intro_info_word{
+        font-size:1.5em;
+        padding-left: 3%;
+        padding-right: 3%;
+        text-align: justify; 
+        color:#563E2F;
+        padding-bottom: 10vw;
+      }
+    }
+    </style>
+</head>
+<body>
+  <div class="landscape-warning">
+    <!-- 提示使用者旋轉裝置 -->
+    <h1>請將手機旋轉為直向模式以獲得最佳瀏覽體驗。</h1>
+  </div>
+  <div id="bgblack" style="display:none; position: absolute; width: 100vw; height: 100vh; z-index: 5000; background-color: black;">
+      <img src="./imagesweb/black.webp" style="width: 100%; height: 100%;">
+  </div>
+  <div id="wrapper">
+      <!-- 作答頁 -->
+      <div id="anwser_page1" class="anwser_page1" style="overflow: auto;">
+        
+        <div id="clue1_1" class="btn" style="text-align: -webkit-center;">
+            <div style="width: 50%;text-align: center;">
+                <img src="./imagesweb/question/answer_title.webp" style="width: 80%;">
+            </div>
+        </div>
+          <div class="cover">
+            <img  src="./imagesweb/question/answer_cover.webp" style="width: 100vw;">
+            <div style="position: absolute; bottom: 0; display: flex; justify-content: center; align-items: center; margin-bottom: 18vw;left: 50%;transform: translateX(-50%);">
+                <img id="showintro2" src="./imagesweb/question/q2.webp" style="width: 45%;">
+                <img id="showintro2_click" src="./imagesweb/question/a2.webp" style="width: 45%;display: none;">
+                <img id="showintro3" src="./imagesweb/question/q3.webp" style="width: 45%;">
+                <img id="showintro3_click" src="./imagesweb/question/a3.webp" style="width: 45%;display: none;">
+                <img id="showintro1" src="./imagesweb/question/q1.webp" style="width: 45%;">
+                <img id="showintro1_click" src="./imagesweb/question/a1.webp" style="width: 45%;display: none;">
+            </div>
+            <img  id="answer_btn" src="./imagesweb/question/ans_btn.webp" style="width: 35%;margin: auto;position: absolute;bottom: 0; margin-bottom: 5vw;left: 50%;transform: translateX(-50%);">
+          </div>
+
+      </div>
+      <!-- 問題頁 -->
+      <div id="question_page1" class="question_page1" style="overflow: auto;display: none;">
+          <div class="back_btn">
+              <img id="question_back" src="./imagesweb/question/back_btn.webp" style="width: 10vw;">
+          </div>
+          <div class="cover">
+              <center>
+                  <!-- <p style="font-size:24px;display: flex;justify-content: center;padding-top: 8vh;"><img src="./imagesweb/question/question_icon.webp" style="width: 8%;"><span  style=" font-weight: 600;margin-left: 3vw; color:#563E2F;">究竟是哪種動物呢?</span></p> -->
+                  <!-- <img src="./imagesweb/home_line.webp" style="width: 70%;"> -->
+                  <!-- <img  src="./imagesweb/question/question_cover.webp" style="position: absolute;width: 100vw;"> -->
+                  <div style="flex-direction: column;display: flex;align-items: center;">
+                    <img src="./imagesweb/question/question_cover_title.webp" style="width: 50%;margin: 2em;">
+                    <div style="display: flex; align-items: center;height: 15vh;">
+                        <div style="float:left;width: 50%;">
+                            <img id="question_info3" style="float: right; padding-right: 5vw;width:20vh" src="./imagesweb/question/a3.webp"/>
+                        </div>
+                        <div style="float:right;width: 50%;">
+                            <span style="font-size:2em; color:#563E2F;font-weight: 700;">台灣水鹿</span><br><br>
+                            <img id="question_answer3" src="./imagesweb/question/qestion_select.webp" style="width: 60%;"/>
+                        </div>
+                    </div>
+                    <br/>
+                    <div style="display: flex; align-items: center;height: 15vh;">
+                        <div style="float:left;width: 50%;">
+                            <img id="question_info2" style="float: right; padding-right: 5vw;width:20vh" src="./imagesweb/question/a2.webp"/>
+                        </div>
+                        <div style="float:right;width: 50%;">
+                            <span style="font-size:2em; color:#563E2F;font-weight: 700;">赤腹松鼠</span><br><br>
+                            <img id="question_answer2" src="./imagesweb/question/qestion_select.webp" style="width: 60%;"/>
+                        </div>
+                    </div>
+                    <br/>
+                    <div style="display: flex; align-items: center;height: 15vh;">
+                        <div style="float:left;width: 50%;">
+                            <img id="question_info1" style="float: right; padding-right: 5vw;width:20vh" src="./imagesweb/question/a1.webp"/>
+                        </div>
+                        <div style="float:right;width: 50%;">
+                            <span style="font-size:2em; color:#563E2F;font-weight: 700;">白鼻心</span><br><br>
+                            <img id="question_answer1" src="./imagesweb/question/qestion_select.webp" style="width: 60%;"/>
+                        </div>
+                    </div>
+                  </div>
+              </center>
+          </div>
+      </div>
+      <!-- 介紹頁 -->
+      <div id="intro" class="intro" style="display: none;">
+          <div id="intro_page1_1" class="intro1_1_page" style="display: none;">
+              <div class="container">
+                  <img src="./imagesweb/intro/intro_1.webp" style="width: 85%;">
+                  <!-- <p style="font-size:25px;position:absolute;top: 0;margin-top: 68%; margin-left: 23%; color:#563E2F;">台灣野山羊</p> -->
+                  <div id="intro_info">
+                      <p id="intro_info_word">● 身長：約15至50公分<br />
+                        ● 分布：主要分布於中低海拔地區，喜歡棲息在常綠闊葉林或森林邊緣。<br />
+                        ● 食物：屬於雜食性動物，偏好吃水果、漿果、昆蟲、無脊椎動物、鳥類及囓齒類等食物。<br /><br />
+                        白鼻心是夜行性動物，喜歡攀爬在樹上，白天則多躲藏於空心倒木或岩洞中。牠們的腳爪具有伸縮能力，腳掌肉墊進化以適應攀爬樹藤，這讓牠們成為食肉目動物中的攀爬專家。特別的是，當受到威脅時，牠們會透過肛門腺分泌特殊氣味以驅散敵人，後腳底的腺體則在行動時留下氣味標記，這也是牠們被稱為「烏腳香」的原因。
+                        <br>
+                        </p>
+                  </div>
+                  <div style="text-align: center;position: absolute;bottom: 0; margin-bottom: 12vh;width: 100%;">
+                      <img id="intro1_back" src="./imagesweb/intro/intro_back.webp" style="width:40%;" />
+                  </div>
+                  
+              </div>
+          </div>
+          <div id="intro_page2_1" class="intro2_1_page" style="display: none;">
+              <div class="container">
+                  <img src="./imagesweb/intro/intro_2.webp" style="width: 85%;">
+                  <!-- <p style="font-size:25px;position:absolute;top: 0;margin-top: 68%; margin-left: 23%; color:#563E2F;">鼬獾</p> -->
+                  <div id="intro_info">
+                      <p id="intro_info_word">● 身長：體長約18至24公分，尾長約18至20公分<br />
+                        ● 分布：廣泛分布於各種海拔的森林，如闊葉林、針葉林、次生林和果園，甚至在都市公園綠地也能見到其蹤影。 <br />
+                        ● 食物：主要以嫩葉、果實、種子等樹上植物為食，偶爾也食用昆蟲和鳥蛋。<br /><br />
+                        赤腹松鼠是日行性且擅長於樹上迅速攀爬的動物，身長和尾長幾乎一樣的牠們，想要發現牠們的蹤跡，可以留意樹上搖晃的樹葉或是大樹頂端圓球形狀的巢穴，這些都可能是牠們活動的跡象。
+                          </p>
+                  </div>
+                  <div style="text-align: center;position: absolute;bottom: 0; margin-bottom: 12vh;width: 100%;">
+                      <img id="intro2_back" src="./imagesweb/intro/intro_back.webp" style="width:40%;" />
+                  </div>
+              </div>
+          </div>
+          <div id="intro_page3_1" class="intro3_1_page" style="display: none;">
+              <div class="container">
+                  <img src="./imagesweb/intro/intro_3.webp" style="width: 85%;">
+                  <!-- <p style="font-size:25px;position:absolute;top: 0;margin-top: 68%; margin-left: 23%; color:#563E2F;">台灣竹雞</p> -->
+                  <div id="intro_info">
+                      <p id="intro_info_word">● 身長：約180至240公分<br /> 
+                        ● 分布：主要分布於海拔1000公尺以上的中高海拔森林，多半沿著高山溪谷分布，在近水源的草地活動。<br />
+                        ● 食物：主要取食森林下層與自身高度相當的葉子和嫩芽。<br /><br />
+                        水鹿是台灣最大型的草食性動物，喜歡在清晨與黃昏時活動。牠們的眼下有明顯的眼下腺，在生氣或興奮時會張開，因此又被稱為「四目鹿」。眼下腺分泌的物質會凝結成硬塊，牠們會用這些硬塊來磨擦樹幹，作為劃定領域的標記。牠們具有堅硬的蹄甲和強壯的四肢，能夠在陡峭的溪谷中自如行動。此外，牠們也擅長游泳，經常在水邊聚集活動和覓食。</p>
+                  </div>
+                  <div style="text-align: center;position: absolute;bottom: 0; margin-bottom: 12vh;width: 100%;">
+                      <img id="intro3_back" src="./imagesweb/intro/intro_back.webp" style="width:40%;" />
+                  </div>
+              </div>
+          </div>
+      </div>
+      <!-- 線索頁 -->
+      <!-- 推測頁成功 -->
+      <div id="result_page_right1" class="result_page1" style="overflow: auto;display: none;">
+        <div style="overflow: auto;">
+          <div class="cover" style="position: absolute;bottom: 0;">
+            <img  src="./imagesweb/question/result_rightbg.webp" style="width: 100vw;">
+            <img  id="result_take" src="./imagesweb/question/result_take.webp" style="width: 35%;margin: auto;position: absolute;bottom: 0; margin-bottom: 10vw;left: 50%;transform: translateX(-50%);">
+            </div>
+        </div>
+       </div>
+      <!-- 推測頁失敗 -->
+      <div id="result_page_wrong1" class="result_page1" style="overflow: auto;display: none;">
+        <div style="overflow: auto;">
+            <div class="cover" style="position: absolute;bottom: 0;">
+                <img  src="./imagesweb/question/result_wrongbg.webp" style="width: 100vw;">
+                <img  id="result_back" src="./imagesweb/question/result_try.webp" style="width: 35%;margin: auto;position: absolute;bottom: 0; margin-bottom: 10vw;left: 50%;transform: translateX(-50%);">
+            </div>
+        </div>  
+       </div>  
+      </div>
+</div>
+</body>
+<script>
+    document.addEventListener("DOMContentLoaded", (event) => {
+        const intro = document.getElementById("intro");//台灣野豬
+        const intro_page1 = document.getElementById("intro_page1_1");//台灣野豬
+        const intro_page2 = document.getElementById("intro_page2_1");//鼬獾
+        const intro_page3 = document.getElementById("intro_page3_1");//赤腹
+        const intro1_back = document.getElementById("intro1_back");
+        const intro2_back = document.getElementById("intro2_back");
+        const intro3_back = document.getElementById("intro3_back");
+        const question_page = document.getElementById("question_page1");
+        const question_back = document.getElementById("question_back");
+        const question_info1 = document.getElementById("question_info1");
+        const question_info2 = document.getElementById("question_info2");
+        const question_info3 = document.getElementById("question_info3");
+        const anwser_page = document.getElementById("anwser_page1");
+        const showintro1 = document.getElementById("showintro1");
+        const showintro2 = document.getElementById("showintro2");
+        const showintro3 = document.getElementById("showintro3");
+        const showintro1_click = document.getElementById("showintro1_click");
+        const showintro2_click = document.getElementById("showintro2_click");
+        const showintro3_click = document.getElementById("showintro3_click");
+        const anwser_btn = document.getElementById("answer_btn");
+        const question_answer1 = document.getElementById("question_answer1");
+        const question_answer2 = document.getElementById("question_answer2");
+        const question_answer3 = document.getElementById("question_answer3");
+        const result_page_right = document.getElementById("result_page_right1");
+        const result_page_wrong = document.getElementById("result_page_wrong1");
+        const result_take = document.getElementById("result_take");
+        const result_back = document.getElementById("result_back");
+        var type = 0;
+        const answergo = () => {
+          anwser_page.style.display = 'none'
+          question_page.style.display = 'block'
+          bgblack.style.display = 'block'
+        }
+        anwser_btn.onclick = answergo
+        const showintro1go = () => {
+          type=0
+          anwser_page.style.display = 'none'
+          intro.style.display = 'block'
+          intro_page1.style.display = 'block'
+          bgblack.style.display = 'block'
+          showintro1.style.display ="none";
+          showintro1_click.style.display ="block";
+        }
+        showintro1.onclick = showintro1go;
+        const showintro2go = () => {
+          type=0
+          anwser_page.style.display = 'none'
+          intro.style.display = 'block'
+          intro_page2.style.display = 'block'
+          bgblack.style.display = 'block'
+          showintro2.style.display ="none";
+          showintro2_click.style.display ="block";
+        }
+        showintro2.onclick = showintro2go;
+        const showintro3go = () => {
+          type=0
+          anwser_page.style.display = 'none'
+          intro.style.display = 'block'
+          intro_page3.style.display = 'block'
+          bgblack.style.display = 'block'
+          showintro3.style.display ="none";
+          showintro3_click.style.display ="block";
+        }
+        showintro3.onclick = showintro3go;
+        const questionback = () => {
+          anwser_page.style.display = 'block'
+          question_page.style.display = 'none'
+          bgblack.style.display = 'block'
+        }
+
+
+        const showintro1go_click = () => {
+          type=0
+          anwser_page.style.display = 'none'
+          intro.style.display = 'block'
+          intro_page1.style.display = 'block'
+          bgblack.style.display = 'block'
+        }
+        showintro1_click.onclick = showintro1go_click;
+        const showintro2go_click = () => {
+          type=0
+          anwser_page.style.display = 'none'
+          intro.style.display = 'block'
+          intro_page2.style.display = 'block'
+          bgblack.style.display = 'block'
+        }
+        showintro2_click.onclick = showintro2go_click;
+        const showintro3go_click = () => {
+          type=0
+          anwser_page.style.display = 'none'
+          intro.style.display = 'block'
+          intro_page3.style.display = 'block'
+          bgblack.style.display = 'block'
+        }
+        showintro3_click.onclick = showintro3go_click;
+        
+
+        question_back.onclick = questionback
+        const questioninfo1 = () => {
+          type=1
+          question_page.style.display = 'none'
+          intro.style.display = 'block'
+          intro_page1.style.display = 'block'
+          bgblack.style.display = 'block'
+        }
+        question_info1.onclick = questioninfo1
+        const questioninfo2 = () => {
+          type=1
+          question_page.style.display = 'none'
+          intro.style.display = 'block'
+          intro_page2.style.display = 'block'
+          bgblack.style.display = 'block'
+        }
+        question_info2.onclick = questioninfo2
+        const questioninfo3 = () => {
+          type=1
+          question_page.style.display = 'none'
+          intro.style.display = 'block'
+          intro_page3.style.display = 'block'
+          bgblack.style.display = 'block'
+        }
+        question_info3.onclick = questioninfo3
+        const introback = () => {
+          if(type===0)
+            anwser_page.style.display = 'block'
+          else
+            question_page.style.display = 'block'
+          intro_page1.style.display = 'none'
+          intro_page2.style.display = 'none'
+          intro_page3.style.display = 'none'
+          intro.style.display = 'none'
+        }
+        intro1_back.onclick = introback
+        intro2_back.onclick = introback
+        intro3_back.onclick = introback
+    
+        const questionanswer1 = () => {
+          question_page.style.display = 'none'
+          result_page_right.style.display = 'block'
+        }
+        const questionanswer2 = () => {
+          question_page.style.display = 'none'
+          result_page_wrong.style.display = 'block'
+        }
+        question_answer1.onclick = questionanswer2
+        question_answer2.onclick = questionanswer1
+        question_answer3.onclick = questionanswer2
+        const resultback = () => {
+          question_page.style.display = 'block'
+          result_page_wrong.style.display = 'none'
+        }
+        result_back.onclick = resultback
+
+        const resulttake = () => {
+            window.location.href = "index_take2.html";
+        }
+        result_take.onclick = resulttake
+    });
+
+</script>
+</html>

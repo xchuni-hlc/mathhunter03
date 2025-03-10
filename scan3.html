@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WebAR - 數感獵人</title>
+  
+  <!-- 使用官方示例中最常見的搭配 -->
+  <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.0.0/dist/mindar-image.prod.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.0.0/dist/mindar-image-aframe.prod.js"></script>
+  
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <a-scene 
+    mindar-image="imageTargetSrc: ./A3.mind; showStats: false;" 
+    embedded 
+    renderer="colorManagement: true;" 
+    vr-mode-ui="enabled: false" 
+    device-orientation-permission-ui="enabled: false"
+  >
+    <a-assets>
+      <a-asset-item id="clue-model" src="./models/clue3.glb"></a-asset-item>
+    </a-assets>
+    
+    <a-camera position="0 0 60" look-controls="enabled: false"></a-camera>
+    
+    <a-entity mindar-image-target="targetIndex: 0">
+      <a-entity 
+        id="ar-model" 
+        gltf-model="#clue-model"
+        scale="0.1 0.1 0.1" 
+        position="0 0 0" 
+        rotation="90 0 0"
+        //animation="property: rotation; to: 0 0 0; loop: true; dur: 10000; easing: linear;"
+        ></a-entity>
+    </a-entity>
+  </a-scene>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('頁面加載完成');
+      
+      // 監聽目標找到和丟失事件
+      const sceneEl = document.querySelector('a-scene');
+      const entity = document.querySelector('[mindar-image-target]');
+      
+      if (entity) {
+        entity.addEventListener('targetFound', function() {
+          console.log('目標找到');
+        });
+        
+        entity.addEventListener('targetLost', function() {
+          console.log('目標丟失');
+        });
+      }
+      
+      // 點擊跳轉
+      document.addEventListener('click', function() {
+        window.location.href = 'https://xchuni-hlc.github.io/mathhunter01/club3.html';
+      });
+    });
+  </script>
+</body>
+</html>

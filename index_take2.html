@@ -1,364 +1,427 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-  <title>拍照</title>
-  <!-- <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script> -->
-  <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/n5ro/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
-  <!-- 添加以下手勢控制腳本 -->
-  <script>
-    AFRAME.registerComponent('draggable-touch', {
-      schema: {
-        minScale: { type: 'number', default: 0.02 },
-        maxScale: { type: 'number', default: 0.08 },
-        minX: { type: 'number', default: -0.3 },
-        maxX: { type: 'number', default: 0.3 },
-        minY: { type: 'number', default: 0 },
-        maxY: { type: 'number', default: 0.5 }
-      },
-      init: function () {
-        const el = this.el;
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <title>拍照</title>
+    <!-- <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script> -->
+    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/n5ro/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+    <!-- 添加以下手勢控制腳本 -->
+    <script>
+      AFRAME.registerComponent('draggable-touch', {
+        schema: {
+          minScale: { type: 'number', default: 0.02 }, // 最小縮放比例
+          maxScale: { type: 'number', default: 0.08 },  // 最大縮放比例
+          minX: { type: 'number', default: -0.3 },     // 拖移範圍：X 軸最小值
+          maxX: { type: 'number', default: 0.3 },      // 拖移範圍：X 軸最大值
+          minY: { type: 'number', default: 0 },      // 拖移範圍：Y 軸最小值
+          maxY: { type: 'number', default: 0.5 }       // 拖移範圍：Y 軸最大值
+        },
+        init: function () {
+          const el = this.el;
 
-        this.isDragging = false;
-        this.isScaling = false;
-        this.isRotating = false;
-        this.startTouches = [];
-        this.startPosition = null;
-        this.startScale = null;
-        this.startRotation = null;
-        this.initialRotationY = 0;
-
-        el.sceneEl.addEventListener('touchstart', this.onTouchStart.bind(this));
-        el.sceneEl.addEventListener('touchmove', this.onTouchMove.bind(this));
-        el.sceneEl.addEventListener('touchend', this.onTouchEnd.bind(this));
-      },
-
-      onTouchStart: function (event) {
-        const touches = event.touches;
-
-        if (touches.length === 1) {
-          this.isDragging = true;
-          this.startTouches = [touches[0]];
-          this.startPosition = this.el.object3D.position.clone();
-        } else if (touches.length === 2) {
-          this.isDragging = false;
-          this.isScaling = true;
-          this.startTouches = [touches[0], touches[1]];
-          this.startScale = this.el.object3D.scale.clone();
-          this.startRotation = this.el.object3D.rotation.clone();
-        } else if (touches.length === 3) {
+          // 儲存觸控點資訊
           this.isDragging = false;
           this.isScaling = false;
-          this.isRotating = true;
-          this.startTouches = [touches[0], touches[1], touches[2]];
-          this.startRotation = this.el.object3D.rotation.clone();
-          this.initialRotationY = this.startRotation.y;
+          this.isRotating = false;
+          this.startTouches = [];
+          this.startPosition = null;
+          this.startScale = null;
+          this.startRotation = null;
+          this.initialRotationY = 0; // 儲存初始 Y 軸旋轉角度
+
+          // 綁定觸控事件
+          el.sceneEl.addEventListener('touchstart', this.onTouchStart.bind(this));
+          el.sceneEl.addEventListener('touchmove', this.onTouchMove.bind(this));
+          el.sceneEl.addEventListener('touchend', this.onTouchEnd.bind(this));
+        },
+
+        onTouchStart: function (event) {
+          const touches = event.touches;
+
+          if (touches.length === 1) {
+            // 單指拖移開始
+            this.isDragging = true;
+            this.startTouches = [touches[0]];
+            this.startPosition = this.el.object3D.position.clone();
+          } else if (touches.length === 2) {
+            // 雙指縮放/旋轉開始
+            this.isDragging = false;
+            this.isScaling = true;
+            this.startTouches = [touches[0], touches[1]];
+            this.startScale = this.el.object3D.scale.clone();
+            this.startRotation = this.el.object3D.rotation.clone();
+          }else if (touches.length === 3) {
+            // 三指旋轉開始
+            this.isDragging = false;
+            this.isScaling = false;
+            this.isRotating = true;
+            this.startTouches = [touches[0], touches[1], touches[2]];
+            this.startRotation = this.el.object3D.rotation.clone();
+            this.initialRotationY = this.startRotation.y;
+          }
+        },
+
+        onTouchMove: function (event) {
+          const touches = event.touches;
+
+          if (this.isDragging && touches.length === 1) {
+            // 單指拖移邏輯
+            const deltaX = (touches[0].clientX - this.startTouches[0].clientX) * 0.001;
+            const deltaY = (touches[0].clientY - this.startTouches[0].clientY) * 0.001;
+
+            // 計算新的位置
+            const newX = Math.max(this.data.minX, Math.min(this.data.maxX, this.startPosition.x + deltaX));
+            const newY = Math.max(this.data.minY, Math.min(this.data.maxY, this.startPosition.y - deltaY));
+
+            this.el.object3D.position.set(newX, newY, this.startPosition.z);
+          } else if (this.isScaling && touches.length === 2) {
+            // 雙指縮放邏輯
+            const currentDistance = this.getDistance(touches[0], touches[1]);
+            const startDistance = this.getDistance(this.startTouches[0], this.startTouches[1]);
+
+            // 縮放計算
+            const scaleMultiplier = currentDistance / startDistance;
+            const newScale = Math.max(
+              this.data.minScale,
+              Math.min(this.data.maxScale, this.startScale.x * scaleMultiplier)
+            );
+
+            this.el.object3D.scale.set(newScale, newScale, newScale);
+          } else if (this.isRotating && touches.length === 3) {
+            // 三指旋轉邏輯
+            const deltaX = (touches[0].clientX + touches[1].clientX + touches[2].clientX) / 3 -
+                          (this.startTouches[0].clientX + this.startTouches[1].clientX + this.startTouches[2].clientX) / 3;
+
+            const rotationSpeed = 0.01; // 控制旋轉速度
+            const newRotationY = this.initialRotationY + deltaX * rotationSpeed;
+
+            this.el.object3D.rotation.set(
+              this.startRotation.x,
+              newRotationY,
+              this.startRotation.z
+            );
+          }
+        },
+
+        onTouchEnd: function () {
+          // 清除狀態
+          this.isDragging = false;
+          this.isScaling = false;
+          this.isRotating = false;
+          this.startTouches = [];
+        },
+
+        // 計算兩指之間的距離
+        getDistance: function (touch1, touch2) {
+          const dx = touch1.clientX - touch2.clientX;
+          const dy = touch1.clientY - touch2.clientY;
+          return Math.sqrt(dx * dx + dy * dy);
+        },
+
+        // 計算兩指之間的角度
+        getAngle: function (touch1, touch2) {
+          const dx = touch2.clientX - touch1.clientX;
+          const dy = touch2.clientY - touch1.clientY;
+          return Math.atan2(dy, dx) * (180 / Math.PI);
         }
-      },
-
-      onTouchMove: function (event) {
-        const touches = event.touches;
-
-        if (this.isDragging && touches.length === 1) {
-          const deltaX = (touches[0].clientX - this.startTouches[0].clientX) * 0.001;
-          const deltaY = (touches[0].clientY - this.startTouches[0].clientY) * 0.001;
-
-          const newX = Math.max(this.data.minX, Math.min(this.data.maxX, this.startPosition.x + deltaX));
-          const newY = Math.max(this.data.minY, Math.min(this.data.maxY, this.startPosition.y - deltaY));
-
-          this.el.object3D.position.set(newX, newY, this.startPosition.z);
-        } else if (this.isScaling && touches.length === 2) {
-          const currentDistance = this.getDistance(touches[0], touches[1]);
-          const startDistance = this.getDistance(this.startTouches[0], this.startTouches[1]);
-
-          const scaleMultiplier = currentDistance / startDistance;
-          const newScale = Math.max(
-            this.data.minScale,
-            Math.min(this.data.maxScale, this.startScale.x * scaleMultiplier)
-          );
-
-          this.el.object3D.scale.set(newScale, newScale, newScale);
-        } else if (this.isRotating && touches.length === 3) {
-          const deltaX = (touches[0].clientX + touches[1].clientX + touches[2].clientX) / 3 -
-                        (this.startTouches[0].clientX + this.startTouches[1].clientX + this.startTouches[2].clientX) / 3;
-
-          const rotationSpeed = 0.01;
-          const newRotationY = this.initialRotationY + deltaX * rotationSpeed;
-
-          this.el.object3D.rotation.set(
-            this.startRotation.x,
-            newRotationY,
-            this.startRotation.z
-          );
+      });
+      </script>
+</head>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+	    background-color: rgb(0, 0, 0);
+touch-action: manipulation;
         }
-      },
-
-      onTouchEnd: function () {
-        this.isDragging = false;
-        this.isScaling = false;
-        this.isRotating = false;
-        this.startTouches = [];
-      },
-
-      getDistance: function (touch1, touch2) {
-        const dx = touch1.clientX - touch2.clientX;
-        const dy = touch1.clientY - touch2.clientY;
-        return Math.sqrt(dx * dx + dy * dy);
-      },
-
-      getAngle: function (touch1, touch2) {
-        const dx = touch2.clientX - touch1.clientX;
-        const dy = touch2.clientY - touch1.clientY;
-        return Math.atan2(dy, dx) * (180 / Math.PI);
+        #sceneContainer {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        #video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+        #captureButton {
+          position: fixed;
+          bottom: 20px;
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 1000;
+          cursor: pointer;
+        }
+        #popup {
+            z-index: 100;
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+        }
+        #capturedImage {
+            max-width: 90%;
+            max-height: 90%;
+        }
+        #closePopup {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px;
+        }
+        .a-canvas {
+            width: 100% !important;
+            height: 100% !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+        }
+        .popup1 {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 1000;
       }
+
+      .popup1.hidden {
+          /* display: none; */
+      }
+
+      .popup1-content {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        width: 300px;
+        position: relative;
+      }
+
+      .close1-btn {
+          position: absolute;
+          top: 0px;
+          right: 10px;
+          font-size: 40px;
+          cursor: pointer;
+          color: #000000;
+      }
+
+      .close1-btn:hover {
+          color: #070707;
+      }
+
+      .popup-button {
+        z-index: 999;
+        position: absolute; /* 使用絕對定位 */
+        top: 10px; /* 距離視窗上方10px */
+        left: 10px; /* 距離視窗左側10px */
+        width: 10%; /* 設置圖片寬度 */
+        height: auto; /* 保持圖片比例 */
+        cursor: pointer; /* 滑鼠變成手型 */
+    }
+      </style>
+    <div id="popup">
+        <img id="capturedImage" src="" alt="Captured Image">
+        <button id="closePopup">關閉</button>
+    </div>
+    <img id="openPopup" src="./imagesweb/q.png" alt="Open Popup" class="popup-button">
+    <div id="popup1" class="popup1">
+      <div class="popup1-content">
+          <span id="closePopup1" class="close1-btn">&times;</span>
+          <h2>操作說明</h2>
+          <p>單指操作：移動動物的位置 <br>
+            雙指操作：縮放動物的大小<br>
+            三指操作：旋轉動物的角度</p>
+      </div>
+  </div>
+  </head>
+  <body>
+    <div id="sceneContainer">
+        <video id="video" style="display: none"></video>
+        <a-scene vr-mode-ui="enabled: false">
+          <a-entity camera look-controls="enabled: false"  wasd-controls="enabled: false" position="0 1.6 0"  orbit-controls="target: #model;" orthographicSize="5" orthographic="true" ></a-entity>  
+	  <a-light color="white" position="5 5 5"></a-light>
+	  <a-light type="ambient" color="#FFF"></a-light>
+          <!-- 3D 模型 -->
+          <!-- <a-box position="-1 0.5 -2" rotation="0 45 0" color="#4CC3D9"></a-box> -->
+          <!-- GLB 模型 -->
+          <a-entity id="model" position="0 1 -1">
+            <!-- <a-gltf-model src="models/result.glb" rotation="0 0 0" scale=".05 .05 .05" gesture-handler="target: #model" 
+            touch-scale="
+              minScale: 0.02; 
+              maxScale: 0.1; 
+              minX: -0.3; 
+              maxX: 0.3; 
+              minY: 0; 
+              maxY: 0.5">
+            </a-gltf-model> -->
+            <a-gltf-model src="models/result.glb" rotation="0 0 0" scale=".05 .05 .05" gesture-handler="target: #model" 
+            draggable-touch>
+            </a-gltf-model>
+          </a-entity>
+          <a-video src="#video" position="0 1.6 -9.5" width="9" height="16"></a-video>
+        </a-scene>
+    </div>
+    <img id="captureButton" src="./imagesweb/question/result_take.webp" style="width: 40%;">拍照</button>
+  </body>
+  
+  <script>
+    // 獲取需要的元素
+const scene = document.querySelector('a-scene');
+const video = document.querySelector('a-video');
+const videoEl = document.querySelector('#video');
+
+// 計算合適的視頻尺寸
+function updateVideoSize() {
+    // 獲取視窗寬高
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+    
+    // 獲取視頻原始寬高比
+    const originalAspect = videoEl.videoWidth / videoEl.videoHeight;
+    
+    // 計算基準尺寸（以視窗高度為基準）
+    const baseHeight = 16; // 基準高度
+    const baseWidth = baseHeight * originalAspect; // 根據原始比例計算寬度
+    
+    // 計算縮放因子（確保視頻能完整顯示）
+    const scaleFactorWidth = windowWidth / (baseWidth * 100); // 100是一個基準值，可以調整
+    const scaleFactorHeight = windowHeight / (baseHeight * 100);
+    const scaleFactor = Math.min(scaleFactorWidth, scaleFactorHeight);
+    
+    // 計算最終尺寸
+    const finalWidth = baseWidth * scaleFactor;
+    const finalHeight = baseHeight * scaleFactor;
+    
+    // 更新 a-video 元素的尺寸
+    video.setAttribute('width', finalWidth);
+    video.setAttribute('height', finalHeight);
+    
+    // 調整 z 位置確保視頻在適當的視距
+    const zPosition = -Math.max(finalWidth, finalHeight) / 2.4;
+    video.setAttribute('position', `0 1.6 ${zPosition}`);
+}
+
+// 在這些事件發生時更新尺寸
+window.addEventListener('resize', () => {
+    requestAnimationFrame(updateVideoSize);
+});
+
+videoEl.addEventListener('loadedmetadata', updateVideoSize);
+scene.addEventListener('loaded', updateVideoSize);
+
+// 初始化調用
+updateVideoSize();
+    const openPopup = document.getElementById("openPopup");
+    const popup1 = document.getElementById("popup1");
+    const closePopup1 = document.getElementById("closePopup1");
+
+    openPopup.addEventListener("click", () => {
+      popup1.style.display = 'flex';
     });
-  </script>
-</head>
-<style>
-  body, html {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background-color: rgb(0, 0, 0);
-      touch-action: manipulation;
-  }
-  #sceneContainer {
-      position: relative;
-      width: 100%;
-      height: 100%;
-  }
-  #video {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: -1;
-  }
-  #captureButton {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 1000;
-      cursor: pointer;
-  }
-  #switchCameraButton {
-      position: fixed;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 1000;
-      cursor: pointer;
-      color: white;
-      font-size: 18px;
-      background-color: #ff5733; /* 改變背景顏色 */
-      border: 2px solid #ffffff; /* 增加白色邊框 */
-      padding: 10px 20px; /* 增加內部間距 */
-      border-radius: 5px; /* 圓角邊框 */
-      font-weight: bold; /* 加粗字體 */
-  }
-  #switchCameraButton:hover {
-      background-color: #c70039; /* 懸停時改變背景顏色 */
-  }
-  #popup {
-      z-index: 100;
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.8);
-      justify-content: center;
-      align-items: center;
-  }
-  #capturedImage {
-      max-width: 90%;
-      max-height: 90%;
-  }
-  #closePopup {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      padding: 10px;
-  }
-  .a-canvas {
-      width: 100% !important;
-      height: 100% !important;
-      top: 0 !important;
-      left: 0 !important;
-      right: 0 !important;
-      bottom: 0 !important;
-  }
-  .popup1 {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-  }
 
-  .popup1.hidden {
-      display: none;
-  }
+    closePopup1.addEventListener("click", () => {
+        popup1.style.display = 'none';
+    });
 
-  .popup1-content {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    width: 300px;
-    position: relative;
-  }
-
-  .close1-btn {
-      position: absolute;
-      top: 0px;
-      right: 10px;
-      font-size: 40px;
-      cursor: pointer;
-      color: #000000;
-  }
-
-  .close1-btn:hover {
-      color: #070707;
-  }
-
-  .popup-button {
-    z-index: 999;
-    position: absolute; 
-    top: 10px;
-    left: 10px;
-    width: 10%;
-    height: auto;
-    cursor: pointer; 
-  }
-</style>
-<div id="popup">
-    <img id="capturedImage" src="" alt="Captured Image">
-    <button id="closePopup">關閉</button>
-</div>
-<img id="openPopup" src="./imagesweb/q.png" alt="Open Popup" class="popup-button">
-<div id="popup1" class="popup1">
-  <div class="popup1-content">
-      <span id="closePopup1" class="close1-btn">&times;</span>
-      <h2>操作說明</h2>
-      <p>單指操作：移動動物的位置 <br>
-        雙指操作：縮放動物的大小<br>
-        三指操作：旋轉動物的角度<br>
-        按下拍照後請自行另存圖片</p>
-  </div>
-</div>
-</head>
-<body>
-  <div id="sceneContainer">
-      <video id="video" style="display: none"></video>
-      <a-scene vr-mode-ui="enabled: false">
-        <a-entity camera look-controls="enabled: false"  wasd-controls="enabled: false" position="0 1.6 0"  orbit-controls="target: #model;" orthographicSize="5" orthographic="true" ></a-entity>
-  <a-light color="white" position="5 5 5"></a-light>
-  <a-light type="ambient" color="#FFF"></a-light>
-        <a-entity id="model" position="0 1 -1">
-          <a-gltf-model src="models/result.glb" rotation="0 0 0" scale=".05 .05 .05" gesture-handler="target: #model" draggable-touch>
-          </a-gltf-model>
-        </a-entity>
-        <a-video src="#video" position="0 1.6 -9.5" width="9" height="16"></a-video>
-      </a-scene>
-  </div>
-  <img id="captureButton" src="./imagesweb/question/result_take.webp" style="width: 40%;">拍照</button>
-  <button id="switchCameraButton">切換相機</button>
-</body>
-
-<script>
-  const openPopup = document.getElementById("openPopup");
-  const popup1 = document.getElementById("popup1");
-  const closePopup1 = document.getElementById("closePopup1");
-
-  openPopup.addEventListener("click", () => {
-    popup1.style.display = 'flex';
-  });
-
-  closePopup1.addEventListener("click", () => {
-      popup1.style.display = 'none';
-  });
-
-  const captureButton = document.getElementById('captureButton');
-  const switchCameraButton = document.getElementById('switchCameraButton');
-  const popup = document.getElementById('popup');
-  const capturedImage = document.getElementById('capturedImage');
-  const closePopup = document.getElementById('closePopup');
-  let currentFacingMode = "environment"; // 初始設置為後置攝像頭
-
-  function switchCamera() {
-    currentFacingMode = (currentFacingMode === "environment") ? "user" : "environment";
-    initCamera();
-  }
-
-  function initCamera() {
+    const captureButton = document.getElementById('captureButton');
+    const popup = document.getElementById('popup');
+    const capturedImage = document.getElementById('capturedImage');
+    const closePopup = document.getElementById('closePopup');
+  window.onload = function () {
+    // 設定後置攝像頭
     var constraints = {
-      video: {
-        facingMode: { exact: currentFacingMode },
-        width: { ideal: 1920 },
-        height: { ideal: 1080 },
-        frameRate: { max: 30 }
-      }
+        video: {
+            facingMode: { exact: "environment" }, // 後置攝像頭
+            width: { ideal: 1920 },    // 理想寬度
+            height: { ideal: 1080 },   // 理想高度
+            frameRate: { max: 30 }     // 最大幀率
+        }
     };
-
-    navigator.mediaDevices.getUserMedia(constraints)
+    // 取得相機權限
+    navigator.mediaDevices.getUserMedia({ 
+        video: {
+            advanced: [{
+              width: { min: 1280, ideal: 1920, max: 3840 },
+              height: { min: 720, ideal: 1080, max: 2160 }
+            }],
+            facingMode: 'environment'
+        } 
+    })
       .then(function (stream) {
+        // 將相機串流設定到 video 元素
         var video = document.getElementById('video');
         video.srcObject = stream;
         video.play();
 
+        // 設定 video 元素的寬高
         video.setAttribute('width', '100%');
         video.setAttribute('height', '100%');
       })
       .catch(function (err) {
         console.error('無法取得相機權限:', err);
       });
-  }
 
-  window.onload = function () {
-    initCamera();
-
+    // 建立 canvas 元素
     var canvas = document.createElement('canvas');
     var ctx = canvas.getContext('2d');
 
-    function captureImage() {
+    // 定義拍照函式
+    function captureImage () {
       var video = document.getElementById('video');
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
 
+      // 將 3D 場景繪製到 canvas 上
       var scene = document.querySelector('a-scene');
-      scene.renderer.render(scene.object3D, scene.camera);
-      ctx.drawImage(scene.canvas, 0, 0);
+        console.log('相機寬度:', video.videoWidth);
+        console.log('場景寬度:', scene.canvas.width);
+        scene.renderer.render(scene.object3D, scene.camera);
+        ctx.drawImage(scene.canvas, 0, 0);
 
+      // 將相機畫面繪製到 canvas 上
       ctx.drawImage(video, 0, 0);
 
+      // 顯示圖片
       var image = new Image();
-      image.src = scene.renderer.domElement.toDataURL('image/webp')
-      capturedImage.src = image.src;
-      popup.style.display = 'flex';
+    //   image.src = canvas.toDataURL('image/webp');
+    //   document.body.appendChild(image);
+    image.src = scene.renderer.domElement.toDataURL('image/webp')
+        capturedImage.src = image.src; // 設置彈出窗口的img src
+        popup.style.display = 'flex'; // 顯示彈出窗口
     };
+    
 
+    // 關閉彈出窗口功能
     closePopup.addEventListener('click', () => {
-      popup.style.display = 'none';
+        popup.style.display = 'none'; // 隱藏彈出窗口
     });
 
+    // 設置事件監聽器
     captureButton.addEventListener('click', captureImage);
-    switchCameraButton.addEventListener('click', switchCamera);
+
   };
 </script>
 </html>

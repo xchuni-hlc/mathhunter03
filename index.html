@@ -12,45 +12,6 @@
   <script src="model-viewer.js"></script>
   <script src="background-gradient.js"></script>
   <style>
-    /* 按鈕基本樣式 */
-    .play-music-btn, .close-music-btn {
-      position: fixed; /* 使用固定定位替代絕對定位 */
-      padding: 10px 20px;
-      border: none;
-      cursor: pointer;
-      z-index: 9999; /* 提高z-index值，確保按鈕顯示在最頂層 */
-      display: block !important; /* 強制顯示按鈕 */
-    }
-
-    .play-music-btn {
-      top: 10px;
-      left: 10px;
-      background-color: green;
-      color: white;
-    }
-
-    .close-music-btn {
-      top: 10px;
-      right: 10px;
-      background-color: red;
-      color: white;
-    }
-
-    /* 修正媒體查詢 */
-    @media (orientation: portrait) {
-      #wrapper {
-        display: block;
-      }
-      .landscape-warning {
-        display: none;
-      }
-      /* 直向模式下的按鈕樣式調整 */
-      .play-music-btn, .close-music-btn {
-        padding: 8px 15px; /* 稍微縮小按鈕尺寸 */
-        font-size: 14px;
-      }
-    }
-
     @media (orientation: landscape) {
       #wrapper {
         display: none;
@@ -61,91 +22,53 @@
         font-size: 20px;
         color: red;
       }
-      /* 橫向模式下的按鈕樣式調整 */
-      .play-music-btn, .close-music-btn {
-        padding: 10px 20px;
-        font-size: 16px;
+    }
+  
+    /* 當裝置為直向時，正常顯示內容 */
+    @media (orientation: portrait) {
+      #wrapper {
+        display: block;
+      }
+      .landscape-warning {
+        display: none;
       }
     }
-  </style>
+      
+    </style>
 </head>
-
 <body>
-  <audio id="bg-audio" loop>
-    <source src="littlehunter.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-  </audio>
-  
-  <!-- 移除這裡的按鈕，因為已經在上方添加了 -->
-  
-  <div class="landscape-warning">
-    <!-- 提示使用者旋轉裝置 -->
-    <h1>請將手機旋轉為直向模式以獲得最佳瀏覽體驗。</h1>
-  </div>
-  
-  <div id="bgblack" style="display:none; position: absolute; width: 100vw; height: 100vh; z-index: 5000; background-color: black;">
-    <img src="./images/black.webp" style="width: 100%; height: 100%;">
-  </div>
-  
-  <!-- 音樂控制按鈕放在所有內容之前，避免被遮擋 -->
-  <button class="play-music-btn" onclick="document.getElementById('bg-audio').play()">播放音樂</button>
-  <button class="close-music-btn" onclick="document.getElementById('bg-audio').pause()">關閉音樂</button>
-  
-  <div id="wrapper">
-    <!-- 首頁 -->
-    <div id="home_page1" class="home_page1">
-      <div class="container" style="height: 100vh;">
-        <!-- <center><img id="home_page1_hunter" src="./images/home_hunter.png"></center> -->
-        <div class="cover">
-          <center>
-            <img id="home_page1_title" src="./imagesweb/home_title.webp">
-          </center>
-        </div>
-        <img id="start_game" src="./images/start_game_btn.png">
-      </div>
+    <div class="landscape-warning">
+      <!-- 提示使用者旋轉裝置 -->
+      <h1>請將手機旋轉為直向模式以獲得最佳瀏覽體驗。</h1>
     </div>
+  <div id="bgblack" style="display:none; position: absolute; width: 100vw; height: 100vh; z-index: 5000; background-color: black;">
+      <img src="./imagesweb/black.webp" style="width: 100%; height: 100%;">
   </div>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", (event) => {
-      // 調整頁面高度
-      let height = window.innerHeight;
-      var home_page1 = document.getElementById("home_page1");
-      home_page1.style.height = height + "px";
-      
-      // 開始按鈕事件監聽
-      var start_game = document.getElementById("start_game");
-      start_game.addEventListener('click', () => {
-        window.location.href = "scan1.html";
-      });
-      
-      // 強制確保音樂按鈕顯示
-      var playBtn = document.querySelector('.play-music-btn');
-      var closeBtn = document.querySelector('.close-music-btn');
-      
-      playBtn.style.display = 'block';
-      closeBtn.style.display = 'block';
-      
-      // 將按鈕提升到最頂部
-      document.body.appendChild(playBtn);
-      document.body.appendChild(closeBtn);
-    });
-
-    // 監聽屏幕方向變化，確保按鈕始終可見
-    window.addEventListener("orientationchange", function() {
-      // 確保無論如何按鈕都是可見的
-      setTimeout(function() {
-        var playBtn = document.querySelector('.play-music-btn');
-        var closeBtn = document.querySelector('.close-music-btn');
-        
-        playBtn.style.display = 'block';
-        closeBtn.style.display = 'block';
-        
-        // 重新將按鈕添加到body最後，確保它們在最上層
-        document.body.appendChild(playBtn);
-        document.body.appendChild(closeBtn);
-      }, 300);
-    });
-  </script>
+  <div id="wrapper">
+      <!-- 首頁 -->
+      <div id="home_page1" class="home_page1">
+          <div class="container" style="height: 100vh;">
+              <!-- <center><img id="home_page1_hunter" src="./imagesweb/home_hunter.webp"></center> -->
+              <div class="cover">
+                  <center>
+                      <img id="home_page1_title" src="./imagesweb/home_title.webp">
+                  </center>
+              </div>
+              <img id="start_game" src="./imagesweb/start_game_btn.webp">
+          </div>
+      </div>
+  </div>
 </body>
+<script>
+    document.addEventListener("DOMContentLoaded", (event) => {
+let height = window.innerHeight;
+        var home_page1 = document.getElementById("home_page1");
+        home_page1.style.height = height + "px";
+        var start_game = document.getElementById("start_game");
+        start_game.addEventListener('click', () => {
+            window.location.href = "club1.html";
+        });
+    });
+
+</script>
 </html>

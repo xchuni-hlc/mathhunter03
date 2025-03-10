@@ -53,8 +53,9 @@
           </div>
           <div id="clueQuestion_1" class="cover">
             <img  src="./imagesweb/question/question2_button_cover.webp" style="width: 100vw;">
-            <img  id="clueAnswerButton1" src="./imagesweb/question/clue2_btn1.webp" style="width: 35%;margin: auto;position: absolute;bottom: 0; margin-bottom: 28vw;left: 50%;transform: translateX(-50%);">
-            <img  id="clueAnswerButton2" src="./imagesweb/question/clue2_btn2.webp" style="width: 35%;margin: auto;position: absolute;bottom: 0; margin-bottom: 15vw;left: 50%;transform: translateX(-50%);">
+            <img  id="clueAnswerButton1" src="./imagesweb/question/clue2_btn1.webp" style="width: 35%;margin: auto;position: absolute;bottom: 0; margin-bottom: 38vw;left: 50%;transform: translateX(-50%);">
+            <img  id="clueAnswerButton2" src="./imagesweb/question/clue2_btn2.webp" style="width: 35%;margin: auto;position: absolute;bottom: 0; margin-bottom: 25vw;left: 50%;transform: translateX(-50%);">
+            <img  id="clueAnswerButton3" src="./imagesweb/question/clue2_btn3.webp" style="width: 35%;margin: auto;position: absolute;bottom: 0; margin-bottom: 12vw;left: 50%;transform: translateX(-50%);">
             <img  src="./imagesweb/question/clue2process.webp" style="width:15%;margin: auto;position: absolute;bottom: 0; margin-bottom: 3vw;left: 50%;transform: translateX(-50%);">
           </div>
           
@@ -69,8 +70,7 @@
 </body>
 <script>
     document.addEventListener("DOMContentLoaded", (event) => {
-
-        let height = window.innerHeight;
+let height = window.innerHeight;
         var clue_page1 = document.getElementById("clue_page1");
         clue_page1.style.height = height + "px";
         var clueQuestion_1 = document.getElementById("clueQuestion_1");
@@ -79,10 +79,11 @@
         var clueAnswerWrong = document.getElementById("clueAnswerWrong");
         var clueAnswerButton1 = document.getElementById("clueAnswerButton1");
         var clueAnswerButton2 = document.getElementById("clueAnswerButton2");
+        var clueAnswerButton3 = document.getElementById("clueAnswerButton3");
         var clueAnswerInfo1 = document.getElementById("clueAnswerInfo1");
         clueAnswerButton1.addEventListener('click', () => {
-            clueAnswerRight.style.display = "block";
-            clueAnswerWrong.style.display = "none";
+            clueAnswerRight.style.display = "none";
+            clueAnswerWrong.style.display = "block";
             clueQuestion_1.style.display = "none";
             clueAnswer_1.style.display = "block";
         });
@@ -92,8 +93,14 @@
             clueQuestion_1.style.display = "none";
             clueAnswer_1.style.display = "block";
         });
+        clueAnswerButton3.addEventListener('click', () => {
+            clueAnswerRight.style.display = "block";
+            clueAnswerWrong.style.display = "none";
+            clueQuestion_1.style.display = "none";
+            clueAnswer_1.style.display = "block";
+        });
         clueAnswerInfo1.addEventListener('click', () => {
-            window.location.href = "scan3.html";
+            window.location.href = "club3.html";
         });
     });
 

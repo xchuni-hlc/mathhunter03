@@ -14,29 +14,29 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/spritespin@4.0.10/release/spritespin.min.js"></script>
   <style>
-  @media (orientation: landscape) {
-    #wrapper {
-      display: none;
+    @media (orientation: landscape) {
+      #wrapper {
+        display: none;
+      }
+      .landscape-warning {
+        display: block;
+        text-align: center;
+        font-size: 20px;
+        color: red;
+      }
     }
-    .landscape-warning {
-      display: block;
-      text-align: center;
-      font-size: 20px;
-      color: red;
+  
+    /* 當裝置為直向時，正常顯示內容 */
+    @media (orientation: portrait) {
+      #wrapper {
+        display: block;
+      }
+      .landscape-warning {
+        display: none;
+      }
     }
-  }
-
-  /* 當裝置為直向時，正常顯示內容 */
-  @media (orientation: portrait) {
-    #wrapper {
-      display: block;
-    }
-    .landscape-warning {
-      display: none;
-    }
-  }
-    
-  </style>
+      
+    </style>
 </head>
 <body>
   <div class="landscape-warning">
@@ -54,13 +54,14 @@
                 <img src="./imagesweb/question/clue1.webp" style="width: 50%;">
               </div>
           </div>
-          <div id="spin"  style=" position: absolute; z-index: 2000;bottom: 0;left: 50%;transform: translateX(-50%); margin-bottom: 40vw;">
+          <div id="spin"  style=" position: absolute; z-index: 2000;bottom: 0;left: 50%;transform: translateX(-50%); margin-bottom: 45vw;">
             <div id="spritespin"></div>
           </div>
           <div id="clueQuestion_1" class="cover">
             <img  src="./imagesweb/question/question1_button_cover.webp" style="width: 100vw;">
-            <img  id="clueAnswerButton1" src="./imagesweb/question/clue1_btn1.webp" style="width: 35%;margin: auto;position: absolute;bottom: 0; margin-bottom: 28vw;left: 50%;transform: translateX(-50%);">
-            <img  id="clueAnswerButton2" src="./imagesweb/question/clue1_btn2.webp" style="width: 35%;margin: auto;position: absolute;bottom: 0; margin-bottom: 15vw;left: 50%;transform: translateX(-50%);">
+            <img  id="clueAnswerButton1" src="./imagesweb/question/clue1_btn1.webp" style="width: 35%;margin: auto;position: absolute;bottom: 0; margin-bottom: 38vw;left: 50%;transform: translateX(-50%);">
+            <img  id="clueAnswerButton2" src="./imagesweb/question/clue1_btn2.webp" style="width: 35%;margin: auto;position: absolute;bottom: 0; margin-bottom: 25vw;left: 50%;transform: translateX(-50%);">
+            <img  id="clueAnswerButton3" src="./imagesweb/question/clue1_btn3.webp" style="width: 35%;margin: auto;position: absolute;bottom: 0; margin-bottom: 12vw;left: 50%;transform: translateX(-50%);">
             <img  src="./imagesweb/question/clue1process.webp" style="width:15%;margin: auto;position: absolute;bottom: 0; margin-bottom: 3vw;left: 50%;transform: translateX(-50%);">
           </div>
           
@@ -74,20 +75,15 @@
   </div>
 </body>
 <script>
-    window.addEventListener("orientationchange", function() {
-      if (window.orientation === 90 || window.orientation === -90) {
-        // alert("請將手機旋轉為直向模式以獲得最佳瀏覽體驗");
-      }
-    });
     document.addEventListener("DOMContentLoaded", (event) => {
-        const images = [];
+      const images = [];
         for (let i = 0; i < 37; i++) {
           images.push('./imagesweb/360-1/'+(100 + i)+'.webp');
         }
         function initSpriteSpin() {
           const container = document.getElementById('spritespin');
           const containerWidth = window.innerWidth * 0.7; // 獲取容器寬度
-          // console.log(containerWidth);
+          console.log(containerWidth);
           const containerHeight = containerWidth * (3/5); // 設置比例，例如 3:2
 
           $('#spritespin').spritespin({
@@ -109,11 +105,10 @@
             $('#spritespin').spritespin('destroy'); // 銷毀舊的實例
             initSpriteSpin(); // 創建新的實例
         });
+        var spin = document.getElementById("spin");
 let height = window.innerHeight;
-console.log(height);
         var clue_page1 = document.getElementById("clue_page1");
         clue_page1.style.height = height + "px";
-        var spin = document.getElementById("spin");
         var clue1 = document.getElementById("clue1_1");
         var clueQuestion_1 = document.getElementById("clueQuestion_1");
         var clueAnswer_1 = document.getElementById("clueAnswer_1");
@@ -121,6 +116,7 @@ console.log(height);
         var clueAnswerWrong = document.getElementById("clueAnswerWrong");
         var clueAnswerButton1 = document.getElementById("clueAnswerButton1");
         var clueAnswerButton2 = document.getElementById("clueAnswerButton2");
+        var clueAnswerButton3 = document.getElementById("clueAnswerButton3");
         var clueAnswerInfo1 = document.getElementById("clueAnswerInfo1");
         clueAnswerButton1.addEventListener('click', () => {
             clueAnswerRight.style.display = "none";
@@ -130,6 +126,13 @@ console.log(height);
             spin.style.display = "none";
         });
         clueAnswerButton2.addEventListener('click', () => {
+            clueAnswerRight.style.display = "none";
+            clueAnswerWrong.style.display = "block";
+            clueQuestion_1.style.display = "none";
+            clueAnswer_1.style.display = "block";
+            spin.style.display = "none";
+        });
+        clueAnswerButton3.addEventListener('click', () => {
             clueAnswerRight.style.display = "block";
             clueAnswerWrong.style.display = "none";
             clueQuestion_1.style.display = "none";
@@ -137,7 +140,7 @@ console.log(height);
             spin.style.display = "none";
         });
         clueAnswerInfo1.addEventListener('click', () => {
-            window.location.href = "scan2.html";
+            window.location.href = "club2.html";
         });
     });
 
